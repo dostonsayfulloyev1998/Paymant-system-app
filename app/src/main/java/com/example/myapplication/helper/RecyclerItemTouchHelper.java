@@ -52,8 +52,8 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void clearView( RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        final View foreground = ((CategoryAdapter.ViewHolder)viewHolder).view_foreground;
-        getDefaultUIUtil().clearView(foreground);
+//        final View foreground = ((CategoryAdapter.ViewHolder)viewHolder).view_foreground;
+//        getDefaultUIUtil().clearView(foreground);
     }
 
 
