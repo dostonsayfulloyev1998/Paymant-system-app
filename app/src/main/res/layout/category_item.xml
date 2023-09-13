@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp">
+
+    <RelativeLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/color_back">
+
+            <LinearLayout
+                android:paddingRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right">
+
+                <ImageView
+                    android:id="@+id/cat_edit"
+                    android:src="@drawable/edit1"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"/>
+
+                <ImageView
+                    android:id="@+id/cat_delete"
+                    android:src="@drawable/delete1"
+                    android:layout_width="35dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/foreground"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:visibility="visible"
+        android:background="@color/color_item">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_width="70dp"
+                android:orientation="vertical"
+                android:layout_height="70dp"
+                android:background="@drawable/circle_back">
+
+                <TextView
+                    android:id="@+id/logo_category"
+                    android:fontFamily="sans-serif-black"
+                    android:textFontWeight="600"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="T"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"/>
+            </LinearLayout>
+
+            <TextView
+               app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/cat_id"/>
+
+            <TextView
+                android:id="@+id/name"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:textColor="#efeef6"/>
+
+            <TextView
+                android:id="@+id/all_sum_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="1.000.000"
+                android:gravity="end"
+                android:paddingRight="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/summa"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+
+</FrameLayout>
