@@ -13,6 +13,7 @@ import com.example.myapplication.adapter.CategoryAdapter;
 import com.example.myapplication.database.DatabaseHelper;
 import com.example.myapplication.fragment.AddCategory;
 import com.example.myapplication.fragment.CategoryActivity;
+import com.example.myapplication.helper.ItemTouchHelperListener;
 import com.example.myapplication.helper.RecyclerItemTouchHelper;
 import com.example.myapplication.model.Category;
 import com.example.myapplication.model.User;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("MissingInflatedId")
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ItemTouchHelperListener  {
 
     private List<Category> list;
     private List<User> userList;
@@ -51,19 +52,15 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private void initView(){
+    private void initView() {
 
-        recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        ItemTouchHelper.SimpleCallback itemTouchHelper = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, new RecyclerItemTouchHelper.RecyclerItemTouchHelperrListener() {
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        ItemTouchHelper.SimpleCallback itemTouchHelper = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelper);
 
-            }
-        });
-        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
+
     }
-
     private void laodData() {
 
         list = new ArrayList<>();
@@ -71,4 +68,12 @@ public class MainActivity extends AppCompatActivity {
             list.add(new Category("catefory item_ "+i));
         }
     }
+
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder) {
+
+    }
+
+
 }

@@ -64,19 +64,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-
-    public boolean updateUser(int id,String name, int sum, int holat, int c_id){
+    public boolean insertUser(int id,String name, int sum, int  holat, int c_id){
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
-
-
+        values.put("id",id);
         values.put("name",name);
         values.put("summa",sum);
         values.put("holat",holat);
         values.put("c_id",c_id);
 
+        long result = db.insert("users",null,values);
+
+        if (result ==-1){
+            return  false;
+        }
+        else
+            return true;
+    }
+
+    public boolean updateUser(int id,String name, int sum){
+
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("name",name);
+        values.put("summa",sum);
 
         Cursor cursor = db.rawQuery("select * from users where id = ?",new String[]{id+""});
 
@@ -94,14 +108,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean deleteUser(int id,String name){
+ public boolean updateCategory(int id,String name){
 
         SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
 
-        Cursor cursor = db.rawQuery("select * from users where id = ?",new String[]{id+""});
+        values.put("id",id);
+        values.put("name",name);
+
+        Cursor cursor = db.rawQuery("select * from category where id = ?",new String[]{id+""});
 
         if(cursor.getCount()>0){
-            long result = db.delete("users","name=?",new String[]{id+""});
+            long result = db.update("category",values,"id=?",new String[]{id+""});
 
             if (result ==-1){
                 return  false;
@@ -112,6 +130,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+
+
+
+    public boolean deleteUser(int id){
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("select * from users where id = ?",new String[]{id+""});
+
+        if(cursor.getCount()>0){
+            long result = db.delete("users","id=?",new String[]{id+""});
+
+            if (result ==-1){
+                return  false;
+            }
+            else
+                return true;
+        }else {
+            return false;
+        }
+    }
+
+    public boolean deleteCategory(int id){
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("select * from category where id = ?",new String[]{id+""});
+
+        if(cursor.getCount()>0){
+            long result = db.delete("category","id=?",new String[]{id+""});
+
+            if (result ==-1){
+                return  false;
+            }
+            else
+                return true;
+        }else {
+            return false;
+        }
+    }
+
 
     public List<User> getUsers(){
         SQLiteDatabase db = getWritableDatabase();
@@ -178,4 +237,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+    public boolean insertCategory(int id,String name){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("id",id);
+        values.put("name",name);
+
+        long result = db.insert("category",null,values);
+
+        if (result ==-1){
+            return  false;
+        }
+        else
+            return true;
+    }
 }

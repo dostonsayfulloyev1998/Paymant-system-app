@@ -8,10 +8,13 @@
     android:layout_marginBottom="10dp">
 
     <RelativeLayout
+
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/color_back">
+        android:background="@drawable/circle">
 
             <LinearLayout
                 android:paddingRight="20dp"
@@ -19,20 +22,13 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|right">
 
-                <ImageButton
-                    android:background="#0000"
-                    android:id="@+id/user_edit"
-                    android:src="@drawable/edit1"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="20dp"/>
 
                 <ImageButton
                     android:background="#0000"
                     android:id="@+id/user_delete"
-                    android:src="@drawable/delete1"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp" />
+                    android:src="@drawable/delete"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
             </LinearLayout>
     </RelativeLayout>
 

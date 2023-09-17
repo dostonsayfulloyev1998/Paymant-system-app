@@ -11,28 +11,20 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/color_back">
+        android:background="#f00">
 
             <LinearLayout
                 android:paddingRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|right">
-
-                <ImageView
-                    android:id="@+id/cat_edit"
-                    android:src="@drawable/edit1"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"/>
-
                 <ImageView
                     android:id="@+id/cat_delete"
-                    android:src="@drawable/delete1"
+                    android:src="@drawable/delete"
                     android:layout_width="35dp"
                     android:layout_height="45dp"
                     android:layout_marginLeft="10dp"/>
+
             </LinearLayout>
     </RelativeLayout>
 

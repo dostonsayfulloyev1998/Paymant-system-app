@@ -12,21 +12,23 @@ import com.example.myapplication.adapter.UserAdapter;
 
 public class RecyclerItemTouchHelper1 extends ItemTouchHelper.SimpleCallback {
 
-    private  RecyclerItemTouchHelperrListener listener;
+    private  ItemTouchHelperListener listener;
 
-    public RecyclerItemTouchHelper1(int drapDirs, int swipeDirs, RecyclerItemTouchHelperrListener listener) {
+    public RecyclerItemTouchHelper1( int drapDirs, int swipeDirs,ItemTouchHelperListener listener) {
         super(drapDirs,swipeDirs);
         this.listener = listener;
     }
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        return false;
+        return true;
     }
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        listener.onSwiped(viewHolder,direction,viewHolder.getAdapterPosition());
+        if (listener!=null){
+            listener.onSwiped(viewHolder);
+        }
     }
 
     @Override
@@ -40,14 +42,14 @@ public class RecyclerItemTouchHelper1 extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onChildDrawOver( Canvas c,  RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         final View foreground = ((UserAdapter.ViewHolder) viewHolder).view_foreground;
-        getDefaultUIUtil().onDrawOver(c,recyclerView,foreground,dX/3,dY,actionState,isCurrentlyActive);
+        getDefaultUIUtil().onDrawOver(c,recyclerView,foreground,dX,dY,actionState,isCurrentlyActive);
     }
 
     @Override
     public void onChildDraw(Canvas c,  RecyclerView recyclerView,  RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         final View foreground = ((UserAdapter.ViewHolder) viewHolder).view_foreground;
 
-            getDefaultUIUtil().onDraw(c,recyclerView,foreground,dX/3,dY,actionState,isCurrentlyActive);
+            getDefaultUIUtil().onDraw(c,recyclerView,foreground,dX,dY,actionState,isCurrentlyActive);
     }
 
     @Override

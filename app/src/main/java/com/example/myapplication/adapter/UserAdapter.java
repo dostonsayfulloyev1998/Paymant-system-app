@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.Listener;
 import com.example.myapplication.ListenerUser;
 import com.example.myapplication.R;
+import com.example.myapplication.model.Category;
+import com.example.myapplication.model.LongListener;
+import com.example.myapplication.model.LongListenerUser;
 import com.example.myapplication.model.User;
 
 import java.util.List;
@@ -29,6 +32,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private Context context;
     private List<User> list;
     private ListenerUser listener;
+    private LongListenerUser longListener;
+
 
     public UserAdapter(Context context, List<User> list) {
         this.context = context;
@@ -37,6 +42,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     public void setListener(ListenerUser listener) {
         this.listener = listener;
+    }
+
+    public void setLongListener(LongListenerUser longListener) {
+        this.longListener = longListener;
     }
 
     @NonNull
@@ -59,6 +68,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         holder.logo.setText((c+"").toUpperCase());
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                longListener.longListenerUser(list.get(position).getId(), list.get(position).getName(), list.get(position).getSumma());
+                return true;
+            }
+        });
+
 
     }
     public void add_user(){
@@ -67,6 +85,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void removeItem(int pos){
+        list.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
+    public void undoItem(User user, int pos){
+        list.add(pos,user);
+        notifyItemInserted(pos);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -82,25 +110,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             sana=itemView.findViewById(R.id.user_sana);
             logo=itemView.findViewById(R.id.logo_user);
 
-            edit=itemView.findViewById(R.id.user_edit);
+
             delete=itemView.findViewById(R.id.user_delete);
 
 
             view_foreground = itemView.findViewById(R.id.foreground);
             view_background = itemView.findViewById(R.id.background);
 
-            edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    listener.onUpdate(d.getId(),d.getName(),d.getSumma());
-                }
-            });
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onDelete(122);
-                }
-            });
+
         }
     }
 }

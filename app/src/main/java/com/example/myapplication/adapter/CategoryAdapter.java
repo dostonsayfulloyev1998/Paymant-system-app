@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.Listener;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Category;
+import com.example.myapplication.model.LongListener;
 import com.example.myapplication.model.User;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     private Context context;
     private Listener listener;
 
+    private LongListener longListener;
+
     public void setListener(Listener listener) {
         this.listener = listener;
     }
@@ -34,6 +37,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         this.list = categories;
         this.userList = userList;
         this.context = context;
+    }
+
+    public void setLongListener(LongListener longListener) {
+        this.longListener = longListener;
     }
 
     @NonNull
@@ -62,13 +69,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         char c = list.get(i).getName().trim().charAt(0);
         holder.logo.setText((c+"").toUpperCase());
 
-
         holder.id.setText(list.get(i).getId()+"");
+
         holder.itemView.setOnClickListener(v ->
                 listener.onCLick(Integer.parseInt(holder.id.getText()+""))
         );
 
-
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                longListener.longListener(list.get(i).getId(),list.get(i).getName());
+                return true;
+            }
+        });
 
     }
 
@@ -82,10 +95,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         notifyItemRemoved(pos);
     }
 
-    public void restoreItem( Category category,int pos){
+    public void undoItem( Category category,int pos){
         list.add(pos,category);
         notifyItemInserted(pos);
     }
+
+ public void refrresh(){
+        notifyDataSetChanged();
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView name,id,summa,logo;
         ImageView edit,delete;
@@ -99,9 +118,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             view_foreground = view.findViewById(R.id.foreground);
             name = itemView.findViewById(R.id.name);
 
-            edit = itemView.findViewById(R.id.cat_edit);
             delete = itemView.findViewById(R.id.cat_delete);
-
 
             name = itemView.findViewById(R.id.name);
             id = itemView.findViewById(R.id.cat_id);

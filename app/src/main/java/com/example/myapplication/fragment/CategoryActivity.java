@@ -2,10 +2,13 @@ package com.example.myapplication.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,15 +27,19 @@ import com.example.myapplication.Listener;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.CategoryAdapter;
 import com.example.myapplication.database.DatabaseHelper;
+import com.example.myapplication.helper.ItemTouchHelperListener;
 import com.example.myapplication.helper.RecyclerItemTouchHelper;
 import com.example.myapplication.model.Category;
+import com.example.myapplication.model.LongListener;
 import com.example.myapplication.model.User;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-
-public class CategoryActivity extends Fragment implements Listener{
+@SuppressLint("MissingInflatedId")
+public class CategoryActivity extends Fragment implements ItemTouchHelperListener,Listener, LongListener {
 
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
@@ -42,6 +50,8 @@ public class CategoryActivity extends Fragment implements Listener{
     private CategoryAdapter adapter;
     private ImageButton cat_back;
     FragmentActivity fragmentActivity;
+    private ConstraintLayout root_view;
+    private BottomSheetDialog bottomSheetDialog;
 
 
     @SuppressLint("MissingInflatedId")
@@ -54,24 +64,9 @@ public class CategoryActivity extends Fragment implements Listener{
         fab = view.findViewById(R.id.fab_cat);
         all_sum = view.findViewById(R.id.all_sum);
         cat_back = view.findViewById(R.id.cat_back);
+        root_view = view.findViewById(R.id.root_category);
 
-        databaseHelper = new DatabaseHelper(getActivity());
-        list = databaseHelper.getCategory();
-        user_list = databaseHelper.getUsers();
-
-        adapter = new CategoryAdapter(list,user_list,getActivity());
-
-        adapter.setListener(this);
-
-        initView();
-
-        recyclerView.setAdapter(adapter);
-        int sum=0;
-        for(User user:user_list){
-            sum+=user.getSumma();
-        }
-
-        all_sum.setText("Jami: "+sum+" so`m");
+        loadData();
 
         fab.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -95,6 +90,36 @@ public class CategoryActivity extends Fragment implements Listener{
         return view;
     }
 
+    private void loadData() {
+        databaseHelper = new DatabaseHelper(getActivity());
+        list = databaseHelper.getCategory();
+
+        user_list = databaseHelper.getUsers();
+
+
+        adapter = new CategoryAdapter(list,user_list,getActivity());
+        adapter.setListener(this);
+        adapter.setLongListener(this);
+
+        initView();
+
+        recyclerView.setAdapter(adapter);
+
+        int sum=0;
+        for (int i = 0; i < list.size(); i++) {
+            int c_id = list.get(i).getId();
+
+            for(User user:user_list){
+                if (c_id == user.getC_id()){
+                    sum+=user.getSumma();
+                }
+            }
+        }
+
+        all_sum.setText("Jami: "+sum+" so`m");
+
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         fragmentActivity = (FragmentActivity) context;
@@ -114,27 +139,75 @@ public class CategoryActivity extends Fragment implements Listener{
         transaction.commit();
     }
 
-    @Override
-    public void onDelete(int catId) {
-
-    }
-
-    @Override
-    public void onUpdate(int id, String name) {
-
-    }
-
     private void initView(){
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
 
-        ItemTouchHelper.SimpleCallback itemTouchHelper = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, new RecyclerItemTouchHelper.RecyclerItemTouchHelperrListener() {
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        ItemTouchHelper.SimpleCallback itemTouchHelper = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
 
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder) {
+        if (viewHolder instanceof  CategoryAdapter.ViewHolder){
+            String nameDelete = list.get(viewHolder.getAdapterPosition()).getName();
+
+            Category category = list.get(viewHolder.getAdapterPosition());
+            int index = viewHolder.getAdapterPosition();
+
+            databaseHelper.deleteCategory(category.getId());
+            adapter.removeItem(index);
+
+            int sum=0;
+            for (int i = 0; i < list.size(); i++) {
+                int c_id = list.get(i).getId();
+
+                for(User user:user_list){
+                    if (c_id == user.getC_id()){
+                        sum+=user.getSumma();
+                    }
+                }
+            }
+
+
+
+            all_sum.setText("Jami: "+sum+" so`m");
+
+          Snackbar snackbar = Snackbar.make(root_view, nameDelete+" o'chirildi! ",Snackbar.LENGTH_LONG);
+          snackbar.setAction("BEKOR QILISH ", new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  databaseHelper.insertCategory(category.getId(),category.getName());
+                    adapter.undoItem(category,index);
+              }
+          });
+
+          snackbar.setActionTextColor(Color.YELLOW);
+          snackbar.show();
+        }
+    }
+
+    @Override
+    public void longListener(int id,String name) {
+         bottomSheetDialog = new BottomSheetDialog(getActivity());
+
+        View view = getLayoutInflater().inflate(R.layout.bottom_dialog_category, null,false);
+        Button button = view.findViewById(R.id.bottom_cat_btn);
+        EditText edit_name = view.findViewById(R.id.bottom_cat_name);
+        edit_name.setText(name);
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                databaseHelper.updateCategory(id,edit_name.getText()+"");
+                bottomSheetDialog.dismiss();
+                loadData();
             }
         });
-        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
+
     }
 
 

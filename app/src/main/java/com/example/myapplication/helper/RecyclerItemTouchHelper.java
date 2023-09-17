@@ -12,52 +12,50 @@ import com.example.myapplication.adapter.CategoryAdapter;
 
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
-    private  RecyclerItemTouchHelperrListener listener;
+    private  ItemTouchHelperListener listener;
 
-    public RecyclerItemTouchHelper( int drapDirs, int swipeDirs,RecyclerItemTouchHelperrListener listener) {
+    public RecyclerItemTouchHelper(int drapDirs, int swipeDirs, ItemTouchHelperListener listener) {
         super(drapDirs,swipeDirs);
         this.listener = listener;
+
     }
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        return false;
+        return true;
     }
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        listener.onSwiped(viewHolder,direction,viewHolder.getAdapterPosition());
+        if (listener!=null){
+            listener.onSwiped(viewHolder);
+       }
     }
 
     @Override
     public void onSelectedChanged (RecyclerView.ViewHolder viewHolder, int actionState) {
         if (viewHolder != null){
-        final View foregroundview = ((CategoryAdapter.ViewHolder) viewHolder).view_foreground;
-        getDefaultUIUtil().onSelected(foregroundview);
-    }
-
+            final View foregroundview = ((CategoryAdapter.ViewHolder) viewHolder).view_foreground;
+            getDefaultUIUtil().onSelected(foregroundview);
+        }
     }
 
     @Override
     public void onChildDrawOver( Canvas c,  RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         final View foreground = ((CategoryAdapter.ViewHolder) viewHolder).view_foreground;
-        getDefaultUIUtil().onDrawOver(c,recyclerView,foreground,dX/3,dY,actionState,isCurrentlyActive);
+        getDefaultUIUtil().onDrawOver(c,recyclerView,foreground,dX,dY,actionState,isCurrentlyActive);
     }
 
     @Override
     public void onChildDraw(Canvas c,  RecyclerView recyclerView,  RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         final View foreground = ((CategoryAdapter.ViewHolder) viewHolder).view_foreground;
-            getDefaultUIUtil().onDraw(c,recyclerView,foreground,dX/3,dY,actionState,isCurrentlyActive);
+            getDefaultUIUtil().onDraw(c,recyclerView,foreground,dX,dY,actionState,isCurrentlyActive);
     }
 
     @Override
     public void clearView( RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-//        final View foreground = ((CategoryAdapter.ViewHolder)viewHolder).view_foreground;
-//        getDefaultUIUtil().clearView(foreground);
+        final View foreground = ((CategoryAdapter.ViewHolder)viewHolder).view_foreground;
+        getDefaultUIUtil().clearView(foreground);
     }
 
-
-    public interface  RecyclerItemTouchHelperrListener{
-        void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
-    }
 }
