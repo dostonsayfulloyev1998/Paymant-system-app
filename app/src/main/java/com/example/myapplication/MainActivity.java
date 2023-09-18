@@ -13,6 +13,7 @@ import com.example.myapplication.adapter.CategoryAdapter;
 import com.example.myapplication.database.DatabaseHelper;
 import com.example.myapplication.fragment.AddCategory;
 import com.example.myapplication.fragment.CategoryActivity;
+import com.example.myapplication.fragment.MainFragment;
 import com.example.myapplication.helper.ItemTouchHelperListener;
 import com.example.myapplication.helper.RecyclerItemTouchHelper;
 import com.example.myapplication.model.Category;
@@ -22,20 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("MissingInflatedId")
-public class MainActivity extends AppCompatActivity implements ItemTouchHelperListener  {
+public class MainActivity extends AppCompatActivity {
 
-    private List<Category> list;
-    private List<User> userList;
-    private RecyclerView recyclerView;
-    private CategoryAdapter adapter;
-    private DatabaseHelper databaseHelper;
-
+//    private List<Category> list;
+//    private List<User> userList;
+//    private RecyclerView recyclerView;
+//    private CategoryAdapter adapter;
+//    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        databaseHelper = new DatabaseHelper(this);
+//        databaseHelper = new DatabaseHelper(this);
 
 //        recyclerView  = findViewById(R.id.res_cat);
 //        laodData();
@@ -52,28 +52,28 @@ public class MainActivity extends AppCompatActivity implements ItemTouchHelperLi
         transaction.commit();
     }
 
-    private void initView() {
-
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
-        ItemTouchHelper.SimpleCallback itemTouchHelper = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelper);
-
-
-    }
-    private void laodData() {
-
-        list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            list.add(new Category("catefory item_ "+i));
-        }
-    }
-
-
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder) {
-
-    }
+//    private void initView() {
+//
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//
+//        ItemTouchHelper.SimpleCallback itemTouchHelper = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT, this);
+//        new ItemTouchHelper(itemTouchHelper);
+//
+//
+//    }
+//    private void laodData() {
+//
+//        list = new ArrayList<>();
+//        for (int i = 0; i < 20; i++) {
+//            list.add(new Category("catefory item_ "+i));
+//        }
+//    }
+//
+//
+//    @Override
+//    public void onSwiped(RecyclerView.ViewHolder viewHolder) {
+//
+//    }
 
 
 }

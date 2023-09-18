@@ -34,7 +34,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private ListenerUser listener;
     private LongListenerUser longListener;
 
-
     public UserAdapter(Context context, List<User> list) {
         this.context = context;
         this.list = list;
@@ -59,9 +58,64 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
       User d = list.get(position);
 
+      int sum = list.get(position).getSumma();
+
+        int a=0,b=0;
+
+        if(sum>=1000 && sum < 1000000){
+            a = sum/1000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+
+            input2.append(s).reverse();
+
+            holder.summa.setText("Jami: "+a+"."+input2+" so`m");
+        }else if (sum<1000){
+            holder.summa.setText("Jami: "+sum+" so`m");
+        }else if(sum>1000000 && sum < 1000000000){
+            a = sum/1000000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+            StringBuilder input3 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+            String s1 = input1.substring(3,6);
+
+            input2.append(s).reverse();
+            input3.append(s1).reverse();
+
+            holder.summa.setText("Jami: "+a+"."+input3+"."+input2+" so`m");
+        } else if (sum>1000000000) {
+            a = sum/1000000000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+            StringBuilder input3 = new StringBuilder("");
+            StringBuilder input4 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+            String s1 = input1.substring(3,6);
+            String s2 = input1.substring(6,9);
+
+            input2.append(s).reverse();
+            input3.append(s1).reverse();
+            input4.append(s2).reverse();
+
+            holder.summa.setText("Jami: "+a+"."+input4+"."+input3+"."+input2+" so`m");
+        }
+
           holder.id.setText(list.get(position).getId()+"");
           holder.name.setText(list.get(position).getName().trim());
-          holder.summa.setText(list.get(position).getSumma()+" so`m");
           holder.sana.setText(list.get(position).getSana()+"");
 
         char c = d.getName().trim().charAt(0);
@@ -72,13 +126,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             @Override
             public boolean onLongClick(View v) {
 
-                longListener.longListenerUser(list.get(position).getId(), list.get(position).getName(), list.get(position).getSumma());
+                longListener.longListenerUser(list.get(position).getId(), list.get(position).getName(), list.get(position).getSumma(),position);
                 return true;
             }
         });
-
-
     }
+
+
+
     public void add_user(){
         notifyDataSetChanged();
     }
@@ -95,6 +150,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void undoItem(User user, int pos){
         list.add(pos,user);
         notifyItemInserted(pos);
+    }
+
+    public void updateChanged(int i,User user) {
+        list.set(i,user);
+        notifyItemChanged(i);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

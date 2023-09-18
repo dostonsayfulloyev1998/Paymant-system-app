@@ -63,13 +63,69 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             }
         }
 
-        holder.name.setText(list.get(i).getName().trim());
-        holder.summa.setText(sum+" so`m");
+        int a=0,b=0;
 
-        char c = list.get(i).getName().trim().charAt(0);
-        holder.logo.setText((c+"").toUpperCase());
+        if(sum>=1000 && sum < 1000000){
+            a = sum/1000;
 
-        holder.id.setText(list.get(i).getId()+"");
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+
+            input2.append(s).reverse();
+
+            holder.summa.setText("Jami: "+a+"."+input2+" so`m");
+        }else if (sum<1000){
+            holder.summa.setText("Jami: "+sum+" so`m");
+        }else if(sum>1000000 && sum < 1000000000){
+            a = sum/1000000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+            StringBuilder input3 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+            String s1 = input1.substring(3,6);
+
+            input2.append(s).reverse();
+            input3.append(s1).reverse();
+
+            holder.summa.setText("Jami: "+a+"."+input3+"."+input2+" so`m");
+        } else if (sum>1000000000) {
+            a = sum/1000000000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+            StringBuilder input3 = new StringBuilder("");
+            StringBuilder input4 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+            String s1 = input1.substring(3,6);
+            String s2 = input1.substring(6,9);
+
+            input2.append(s).reverse();
+            input3.append(s1).reverse();
+            input4.append(s2).reverse();
+
+            holder.summa.setText("Jami: "+a+"."+input4+"."+input3+"."+input2+" so`m");
+        }
+
+        if (list!=null){
+            holder.name.setText(list.get(i).getName().trim());
+            char c = list.get(i).getName().trim().charAt(0);
+//            holder.logo.setText((c+"").toUpperCase());
+
+            holder.id.setText(list.get(i).getId()+"");
+//            holder.holat.setText(list.get(i).getHolat()+"");
+        }
+
 
         holder.itemView.setOnClickListener(v ->
                 listener.onCLick(Integer.parseInt(holder.id.getText()+""))
@@ -82,12 +138,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 return true;
             }
         });
-
     }
+
 
     @Override
     public int getItemCount() {
+       if (list!=null)
         return list.size();
+
+       else
+           return 0;
     }
 
     public void removeItem(int pos){
@@ -104,9 +164,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name,id,summa,logo;
+        TextView name,id,summa,logo,holat;
         ImageView edit,delete;
         View view;
        public RelativeLayout view_background,view_foreground;
@@ -123,7 +182,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             name = itemView.findViewById(R.id.name);
             id = itemView.findViewById(R.id.cat_id);
             summa = itemView.findViewById(R.id.all_sum_item);
-            logo = itemView.findViewById(R.id.logo_category);
+            holat = itemView.findViewById(R.id.holat);
         }
     }
 }

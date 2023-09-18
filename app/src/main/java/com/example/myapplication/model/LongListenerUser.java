@@ -1,5 +1,5 @@
 package com.example.myapplication.model;
 
 public interface LongListenerUser {
-    void longListenerUser(int id, String name, int sum);
+    void longListenerUser(int id, String name, int sum,int i);
 }

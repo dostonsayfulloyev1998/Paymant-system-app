@@ -55,10 +55,12 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
     private List<User> list = new ArrayList<>();
     private DatabaseHelper databaseHelper;
     private TextView all_sum_user;
-    private int c_id=1;
+    private int c_id;
+//    private int holat;
     private ImageButton back_arrow;
     FragmentActivity fragmentActivity;
     private ConstraintLayout root_view;
+    BottomSheetDialog bottomSheetDialog;
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -73,6 +75,7 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
         all_sum_user = view.findViewById(R.id.all_sum_user);
         root_view = view.findViewById(R.id.root_user);
 
+        databaseHelper = new DatabaseHelper(getActivity());
        loadData();
 
 
@@ -90,9 +93,11 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Bundle bundle = new Bundle();
+
                 CategoryActivity categoryActivityFragment = new CategoryActivity();
-                categoryActivityFragment.setArguments(bundle);
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("holat",holat);
+//                categoryActivityFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.category_container, categoryActivityFragment).addToBackStack(null);
@@ -103,7 +108,11 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
         back_arrow.setOnClickListener(v -> {
+
             CategoryActivity categoryActivityFragment = new CategoryActivity();
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("holat",holat);
+//            categoryActivityFragment.setArguments(bundle);
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.category_container, categoryActivityFragment).addToBackStack(null);
             transaction.commit();
@@ -113,8 +122,9 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
     }
 
     void loadData(){
-        databaseHelper = new DatabaseHelper(getActivity());
+
         c_id = getArguments().getInt("c_id");
+//        holat = getArguments().getInt("holat");
 
         int sum = 0;
         for (User user: databaseHelper.getUsers()){
@@ -124,7 +134,60 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
             }
         }
 
-        all_sum_user.setText("Jami: " +sum+" so'm");
+        int a=0,b=0;
+
+        if(sum>=1000 && sum < 1000000){
+            a = sum/1000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+
+            input2.append(s).reverse();
+
+            all_sum_user.setText("Jami: "+a+"."+input2+" so`m");
+        }else if (sum<1000){
+            all_sum_user.setText("Jami: "+sum+" so`m");
+        }else if(sum>1000000 && sum < 1000000000){
+            a = sum/1000000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+            StringBuilder input3 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+            String s1 = input1.substring(3,6);
+
+            input2.append(s).reverse();
+            input3.append(s1).reverse();
+
+            all_sum_user.setText("Jami: "+a+"."+input3+"."+input2+" so`m");
+        } else if (sum>1000000000) {
+            a = sum/1000000000;
+
+            StringBuilder input1 = new StringBuilder("");
+            StringBuilder input2 = new StringBuilder("");
+            StringBuilder input3 = new StringBuilder("");
+            StringBuilder input4 = new StringBuilder("");
+
+            input1.append(sum+"");
+            input1.reverse();
+            String s = input1.substring(0,3);
+            String s1 = input1.substring(3,6);
+            String s2 = input1.substring(6,9);
+
+            input2.append(s).reverse();
+            input3.append(s1).reverse();
+            input4.append(s2).reverse();
+
+            all_sum_user.setText("Jami: "+a+"."+input4+"."+input3+"."+input2+" so`m");
+        }
+
 
         adapter = new UserAdapter(getActivity(),list);
         adapter.setListener(this);
@@ -194,10 +257,9 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
     }
 
 
-
     @Override
-    public void longListenerUser(int id, String name, int sum) {
-     BottomSheetDialog   bottomSheetDialog = new BottomSheetDialog(getActivity());
+    public void longListenerUser(int id, String name, int sum,int i) {
+        bottomSheetDialog = new BottomSheetDialog(getActivity());
 
         View view = getLayoutInflater().inflate(R.layout.bottom_dialog_user, null,false);
          Button button = view.findViewById(R.id.bottom_user_btn);
@@ -214,10 +276,12 @@ public class UserActivity extends Fragment implements ListenerUser, ItemTouchHel
             @Override
             public void onClick(View v) {
                 databaseHelper.updateUser(id,edit_name.getText()+"", Integer.parseInt(edit_summa.getText()+""));
-                loadData();
                 bottomSheetDialog.dismiss();
+                adapter.updateChanged(i,list.get(i));
+
             }
         });
+
     }
 }
 

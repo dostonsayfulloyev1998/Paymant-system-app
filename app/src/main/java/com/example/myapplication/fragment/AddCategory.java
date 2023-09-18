@@ -32,6 +32,7 @@ public class AddCategory extends Fragment {
     private DatabaseHelper databaseHelper;
      private ImageButton back_arrow;
      private TextWatcher text;
+//     private int holat;
 
     @Nullable
     @Override
@@ -43,6 +44,9 @@ public class AddCategory extends Fragment {
         Button btn_add = view.findViewById(R.id.add_category);
          Button btn_demo = view.findViewById(R.id.add_category_demo);
         EditText edit_name = view.findViewById(R.id.edit_category_name);
+//        holat = getArguments().getInt("holat");
+
+//        Toast.makeText(getActivity(),holat+"",Toast.LENGTH_SHORT).show();
 
         text = new TextWatcher() {
             @Override
@@ -60,7 +64,6 @@ public class AddCategory extends Fragment {
                 else if (edit_name.getText().length() == 0) {
                     btn_add.setVisibility(View.GONE);
                     btn_demo.setVisibility(View.VISIBLE);
-
                 }
             }
 
@@ -90,11 +93,18 @@ public class AddCategory extends Fragment {
         databaseHelper = new DatabaseHelper(getActivity());
 
         btn_add.setOnClickListener(v -> {
+
+//            holat = getArguments().getInt("holat");
+
             databaseHelper.insertCategory(edit_name.getText()+"");
-            CategoryActivity userFragment = new CategoryActivity();
+
+            CategoryActivity categoryActivity = new CategoryActivity();
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("holat",holat);
+//            categoryActivity.setArguments(bundle);
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.category_container, userFragment);
+            transaction.replace(R.id.category_container, categoryActivity);
             transaction.commit();
         });
 
@@ -102,10 +112,16 @@ public class AddCategory extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                CategoryActivity userFragment = new CategoryActivity();
+                CategoryActivity categoryActivity = new CategoryActivity();
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("holat",holat);
+//                categoryActivity.setArguments(bundle);
+
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.category_container, userFragment);
+                transaction.replace(R.id.category_container, categoryActivity);
                 transaction.commit();
+
+
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);

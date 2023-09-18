@@ -17,7 +17,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(@Nullable Context context) {
-        super(context, "mydatabase3.db", null, 1);
+        super(context, "mydatabase6.db", null, 1);
     }
 
     @Override
@@ -217,6 +217,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()){
             int id = cursor.getInt(0);
             String name = cursor.getString(1);
+//            int holat = cursor.getInt(2);
             list.add(new Category(id,name));
         }
 
@@ -237,12 +238,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+
     public boolean insertCategory(int id,String name){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put("id",id);
         values.put("name",name);
+//        values.put("holat",holat);
 
         long result = db.insert("category",null,values);
 
